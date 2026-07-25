@@ -1,0 +1,106 @@
+/* ============================================================
+   NSK LANDING — shares the "Terracotta Editorial" tokens from the
+   Sampada app so the two feel like one brand.
+   ============================================================ */
+
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-2: var(--primary-2);
+  --color-primary-fg: var(--primary-fg);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-soft: var(--accent-soft);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+}
+
+:root {
+  --bg: #f8f3ec;
+  --surface: #fffdf9;
+  --surface-2: #f0e7db;
+  --border: #e7dccb;
+  --fg: #241b14;
+  --muted: #6e6255;
+  --primary: #b4502c;
+  --primary-2: #c86340;
+  --primary-fg: #fdf5ec;
+  --accent: #b07e23;
+  --accent-2: #c99a38;
+  --accent-soft: #f2e6ce;
+  --shadow: 0 14px 36px -18px rgba(36, 27, 20, 0.24);
+  --radius: 12px;
+  --font-display: "Archivo", "Noto Sans Devanagari", sans-serif;
+  --font-body: "Public Sans", "Noto Sans Devanagari", sans-serif;
+}
+
+:root[data-theme="dark"] {
+  --bg: #14100b;
+  --surface: #1e1811;
+  --surface-2: #191309;
+  --border: #33291a;
+  --fg: #f2eadf;
+  --muted: #aa9c89;
+  --primary: #dc7550;
+  --primary-2: #e78a64;
+  --primary-fg: #1a0f08;
+  --accent: #d9b25a;
+  --accent-2: #e7c87a;
+  --accent-soft: #2e2410;
+  --shadow: 0 20px 46px -22px rgba(0, 0, 0, 0.72);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.25s, color 0.25s;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 640px) {
+  .wrap {
+    padding: 0 18px;
+  }
+}
