@@ -1,16 +1,43 @@
-import { ArrowRight, MapPin, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, FileText, MapPin, Sparkles } from "lucide-react";
 import { useLanguage, useT } from "../i18n/LanguageContext";
 import { ONBOARD_URL } from "../lib/constants";
+import {
+  DISTRICT_COUNT,
+  FEATURED_DISTRICTS,
+  currentSessionStartYear,
+  formatSession,
+} from "../lib/guideline";
 
-const SAMPLE_ROWS: { district: { en: string; hi: string }; rate: string }[] = [
-  { district: { en: "Gwalior — Residential", hi: "ग्वालियर — आवासीय" }, rate: "₹18,400 / sq.m" },
-  { district: { en: "Bhopal — Commercial", hi: "भोपाल — व्यावसायिक" }, rate: "₹52,900 / sq.m" },
-  { district: { en: "Indore — Agricultural", hi: "इंदौर — कृषि" }, rate: "₹6,200 / sq.m" },
-];
+/** How long each district stays on screen before the card advances. */
+const SLIDE_MS = 2600;
 
 export function Hero() {
   const t = useT();
   const { lang } = useLanguage();
+
+  const session = formatSession(currentSessionStartYear());
+
+  // The card cycles through real districts. It shows what the lookup covers,
+  // not invented rates: collector rates vary by locality and property type
+  // within a single district, so no one number is true for "Gwalior".
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    // Anyone who has asked not to see motion gets a still card.
+    const stillness = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (stillness.matches) return;
+
+    const id = window.setInterval(
+      () => setIndex((i) => (i + 1) % FEATURED_DISTRICTS.length),
+      SLIDE_MS,
+    );
+    return () => window.clearInterval(id);
+  }, []);
+
+  // Three at a time, wrapping — so the list moves rather than swapping wholesale.
+  const visible = [0, 1, 2].map(
+    (offset) => FEATURED_DISTRICTS[(index + offset) % FEATURED_DISTRICTS.length]!,
+  );
 
   return (
     <section id="top" className="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-28">
@@ -65,31 +92,45 @@ export function Hero() {
                     {lang === "en" ? "Guideline Rate Lookup" : "गाइडलाइन दर खोज"}
                   </p>
                   <p className="text-xs text-muted">
-                    {lang === "en" ? "Live, official rates" : "लाइव, सरकारी दरें"}
+                    {lang === "en"
+                      ? `${session} session · official PDFs`
+                      : `${session} सत्र · सरकारी पीडीएफ`}
                   </p>
                 </div>
               </div>
-              <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary">
-                {lang === "en" ? "Verified" : "सत्यापित"}
+              {/* The session, not a "Verified" stamp: what this card can honestly
+                  vouch for is which session's circulars are on file. */}
+              <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold tabular-nums text-primary">
+                {session}
               </span>
             </div>
 
+            {/*
+              Districts, not rates. A collector rate depends on the locality and
+              the property type inside a district, so a single "Gwalior" figure
+              would be wrong for almost every plot in Gwalior — and this page is
+              the last place to print a number nobody can source.
+            */}
             <div className="mt-4 space-y-3">
-              {SAMPLE_ROWS.map((row) => (
+              {visible.map((district, position) => (
                 <div
-                  key={row.district.en}
-                  className="flex items-center justify-between rounded-xl bg-surface-2 px-4 py-3"
+                  key={district.en}
+                  className="flex items-center justify-between rounded-xl bg-surface-2 px-4 py-3 transition-opacity duration-500"
+                  style={{ opacity: position === 2 ? 0.55 : 1 }}
                 >
-                  <span className="text-sm text-fg">{row.district[lang]}</span>
-                  <span className="text-sm font-semibold text-primary">{row.rate}</span>
+                  <span className="text-sm text-fg">{district[lang]}</span>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary">
+                    <FileText size={13} aria-hidden />
+                    {lang === "en" ? "EN + हिं" : "अंग्रेज़ी + हिंदी"}
+                  </span>
                 </div>
               ))}
             </div>
 
             <div className="mt-5 rounded-xl border border-dashed border-border p-3 text-center text-xs text-muted">
               {lang === "en"
-                ? "+ 52 districts · updated with every official notification"
-                : "+ 52 जिले · हर सरकारी अधिसूचना के साथ अपडेट"}
+                ? `All ${DISTRICT_COUNT} districts · updated with every official notification`
+                : `सभी ${DISTRICT_COUNT} जिले · हर सरकारी अधिसूचना के साथ अपडेट`}
             </div>
           </div>
 

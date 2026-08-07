@@ -32,8 +32,8 @@ export const strings = {
   stat1Label: t("districts covered", "जिले कवर किए गए"),
   stat2Value: t("2.4L+", "2.4L+"),
   stat2Label: t("verified property records", "सत्यापित संपत्ति रिकॉर्ड"),
-  stat3Value: t("2016–2026", "2016–2026"),
-  stat3Label: t("years of guideline data", "वर्षों का गाइडलाइन डेटा"),
+  stat3Value: t("2015–2027", "2015–2027"),
+  stat3Label: t("sessions of guideline data", "सत्रों का गाइडलाइन डेटा"),
   stat4Value: t("EN / हिं", "EN / हिं"),
   stat4Label: t("fully bilingual, always", "पूरी तरह द्विभाषी, हमेशा"),
 
@@ -45,7 +45,7 @@ export const strings = {
   ),
 
   featGuidelineTitle: t("Guideline Rates", "गाइडलाइन दरें"),
-  featGuidelineDesc: t("Official collector rates for every district, 2016–2026, updated as they're notified.", "हर जिले के लिए सरकारी कलेक्टर दरें, 2016–2026, अधिसूचित होते ही अपडेट।"),
+  featGuidelineDesc: t("Official collector rate circulars for every district, from the 2015-2016 session to 2026-2027, added as they're notified.", "हर जिले के लिए सरकारी कलेक्टर दर परिपत्र, 2015-2016 सत्र से 2026-2027 तक, अधिसूचित होते ही जोड़े जाते हैं।"),
   featDeedsTitle: t("Deeds & Instruments", "विलेख व दस्तावेज़"),
   featDeedsDesc: t("Sale, lease, partition, gift and more — explained in plain language.", "विक्रय, पट्टा, विभाजन, दान व अन्य — सरल भाषा में समझाए गए।"),
   featDeedMgmtTitle: t("Deed Management", "विलेख प्रबंधन"),
