@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, FileText, MapPin, Sparkles } from "lucide-react";
+import { ArrowRight, MapPin, Sparkles } from "lucide-react";
 import { useLanguage, useT } from "../i18n/LanguageContext";
 import { ONBOARD_URL } from "../lib/constants";
 import {
@@ -106,10 +106,15 @@ export function Hero() {
             </div>
 
             {/*
-              Districts, not rates. A collector rate depends on the locality and
-              the property type inside a district, so a single "Gwalior" figure
-              would be wrong for almost every plot in Gwalior — and this page is
-              the last place to print a number nobody can source.
+              Each row carries the district in *both* scripts — which differs
+              row to row, unlike the identical "EN + हिं" badge this replaced,
+              and shows the bilingual promise instead of asserting it.
+
+              The right-hand column is where a collector rate would go. It does
+              not hold one, because a rate is set per locality and property type
+              *inside* a district: a single figure labelled "Gwalior" is wrong
+              for almost every plot in Gwalior. Any rate put here later must
+              name its locality and property type alongside it.
             */}
             <div className="mt-4 space-y-3">
               {visible.map((district, position) => (
@@ -118,10 +123,11 @@ export function Hero() {
                   className="flex items-center justify-between rounded-xl bg-surface-2 px-4 py-3 transition-opacity duration-500"
                   style={{ opacity: position === 2 ? 0.55 : 1 }}
                 >
-                  <span className="text-sm text-fg">{district[lang]}</span>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary">
-                    <FileText size={13} aria-hidden />
-                    {lang === "en" ? "EN + हिं" : "अंग्रेज़ी + हिंदी"}
+                  <span className="text-sm text-fg">
+                    {lang === "en" ? district.en : district.hi}
+                  </span>
+                  <span className="text-sm font-semibold text-primary">
+                    {lang === "en" ? district.hi : district.en}
                   </span>
                 </div>
               ))}
