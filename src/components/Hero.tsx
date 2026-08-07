@@ -4,12 +4,14 @@ import { useLanguage, useT } from "../i18n/LanguageContext";
 import { ONBOARD_URL } from "../lib/constants";
 import {
   DISTRICT_COUNT,
-  FEATURED_DISTRICTS,
+  GWALIOR_PLACES,
+  RATE_SOURCE,
   currentSessionStartYear,
+  formatIndian,
   formatSession,
 } from "../lib/guideline";
 
-/** How long each district stays on screen before the card advances. */
+/** How long each locality stays on screen before the card advances. */
 const SLIDE_MS = 2600;
 
 export function Hero() {
@@ -18,9 +20,10 @@ export function Hero() {
 
   const session = formatSession(currentSessionStartYear());
 
-  // The card cycles through real districts. It shows what the lookup covers,
-  // not invented rates: collector rates vary by locality and property type
-  // within a single district, so no one number is true for "Gwalior".
+  // Cycles through real localities from the 2026-2027 Gwalior guideline. The
+  // rotation is doing work, not decoration: New City Centre is ₹80,000/sq.m
+  // and Kotaviran ₹6,000 in the same city, and watching that change is the
+  // clearest way to show why a district-level rate is meaningless.
   const [index, setIndex] = useState(0);
   useEffect(() => {
     // Anyone who has asked not to see motion gets a still card.
@@ -28,7 +31,7 @@ export function Hero() {
     if (stillness.matches) return;
 
     const id = window.setInterval(
-      () => setIndex((i) => (i + 1) % FEATURED_DISTRICTS.length),
+      () => setIndex((i) => (i + 1) % GWALIOR_PLACES.length),
       SLIDE_MS,
     );
     return () => window.clearInterval(id);
@@ -36,7 +39,7 @@ export function Hero() {
 
   // Three at a time, wrapping — so the list moves rather than swapping wholesale.
   const visible = [0, 1, 2].map(
-    (offset) => FEATURED_DISTRICTS[(index + offset) % FEATURED_DISTRICTS.length]!,
+    (offset) => GWALIOR_PLACES[(index + offset) % GWALIOR_PLACES.length]!,
   );
 
   return (
@@ -93,8 +96,8 @@ export function Hero() {
                   </p>
                   <p className="text-xs text-muted">
                     {lang === "en"
-                      ? `${session} session · official PDFs`
-                      : `${session} सत्र · सरकारी पीडीएफ`}
+                      ? `${RATE_SOURCE.district.en} · ${session} · plot, ₹/sq.m`
+                      : `${RATE_SOURCE.district.hi} · ${session} · भूखंड, ₹/वर्ग मीटर`}
                   </p>
                 </div>
               </div>
@@ -106,28 +109,26 @@ export function Hero() {
             </div>
 
             {/*
-              Each row carries the district in *both* scripts — which differs
-              row to row, unlike the identical "EN + हिं" badge this replaced,
-              and shows the bilingual promise instead of asserting it.
-
-              The right-hand column is where a collector rate would go. It does
-              not hold one, because a rate is set per locality and property type
-              *inside* a district: a single figure labelled "Gwalior" is wrong
-              for almost every plot in Gwalior. Any rate put here later must
-              name its locality and property type alongside it.
+              Real figures from the 2026-2027 Gwalior guideline. Each carries
+              its ward, because that — not the city — is what the rate belongs
+              to. Same district, ₹6,000 to ₹80,000: printing one "Gwalior rate"
+              is how the wrong numbers got here in the first place.
             */}
             <div className="mt-4 space-y-3">
-              {visible.map((district, position) => (
+              {visible.map((row, position) => (
                 <div
-                  key={district.en}
-                  className="flex items-center justify-between rounded-xl bg-surface-2 px-4 py-3 transition-opacity duration-500"
+                  key={row.place.en}
+                  className="flex items-center justify-between gap-3 rounded-xl bg-surface-2 px-4 py-3 transition-opacity duration-500"
                   style={{ opacity: position === 2 ? 0.55 : 1 }}
                 >
-                  <span className="text-sm text-fg">
-                    {lang === "en" ? district.en : district.hi}
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm text-fg">
+                      {lang === "en" ? row.place.en : row.place.hi}
+                    </span>
+                    <span className="block truncate text-[11px] text-muted">{row.ward}</span>
                   </span>
-                  <span className="text-sm font-semibold text-primary">
-                    {lang === "en" ? district.hi : district.en}
+                  <span className="shrink-0 text-sm font-semibold tabular-nums text-primary">
+                    ₹{formatIndian(row.residential)}
                   </span>
                 </div>
               ))}
@@ -135,8 +136,8 @@ export function Hero() {
 
             <div className="mt-5 rounded-xl border border-dashed border-border p-3 text-center text-xs text-muted">
               {lang === "en"
-                ? `All ${DISTRICT_COUNT} districts · updated with every official notification`
-                : `सभी ${DISTRICT_COUNT} जिले · हर सरकारी अधिसूचना के साथ अपडेट`}
+                ? `Residential plot rates from the official ${session} circular · all ${DISTRICT_COUNT} districts`
+                : `सरकारी ${session} परिपत्र से आवासीय भूखंड दरें · सभी ${DISTRICT_COUNT} जिले`}
             </div>
           </div>
 
