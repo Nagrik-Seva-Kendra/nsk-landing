@@ -35,10 +35,10 @@ export function Footer() {
             {t("footLegal")}
           </p>
           <div className="mt-3 flex flex-col gap-2 text-sm text-muted">
-            <a href="#" className="hover:text-fg">
+            <a href="/privacy.html" className="hover:text-fg">
               {t("footPrivacy")}
             </a>
-            <a href="#" className="hover:text-fg">
+            <a href="/privacy.html#terms" className="hover:text-fg">
               {t("footTerms")}
             </a>
           </div>
